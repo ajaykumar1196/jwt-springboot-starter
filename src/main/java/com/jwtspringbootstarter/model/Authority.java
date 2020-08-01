@@ -1,13 +1,10 @@
 package com.jwtspringbootstarter.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "authorities")
-public class Authority implements GrantedAuthority {
+public class Authority {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,12 +14,10 @@ public class Authority implements GrantedAuthority {
     @Column(name = "authority")
     private String authority;
 
-    @JsonIgnore
     public int getId() {
         return id;
     }
 
-    @Override
     public String getAuthority() {
         return authority;
     }
