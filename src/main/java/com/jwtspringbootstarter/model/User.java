@@ -53,7 +53,11 @@ public class User implements UserDetails {
     @Column(name = "is_enabled")
     private boolean isEnabled;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name="users_authorities",
+            joinColumns={@JoinColumn(name="user_id", referencedColumnName="ID")},
+            inverseJoinColumns={@JoinColumn(name="authorities_id", referencedColumnName="ID")})
     private List<Authority> authorities;
 
     public Long getId() {
