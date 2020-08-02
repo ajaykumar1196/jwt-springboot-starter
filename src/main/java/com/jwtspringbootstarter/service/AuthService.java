@@ -4,7 +4,9 @@ import com.jwtspringbootstarter.config.JWTConfig;
 import com.jwtspringbootstarter.dto.AuthenticationResponse;
 import com.jwtspringbootstarter.dto.LoginRequest;
 import com.jwtspringbootstarter.dto.RegisterRequest;
+import com.jwtspringbootstarter.model.Authority;
 import com.jwtspringbootstarter.model.User;
+import com.jwtspringbootstarter.repository.AuthorityRepository;
 import com.jwtspringbootstarter.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import static java.util.Date.from;
 
@@ -26,13 +30,15 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
     private final AuthenticationManager authenticationManager;
     private final JWTConfig jwtConfig;
 
 
-    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, AuthenticationManager authenticationManager, JWTConfig jwtConfig) {
+    public AuthService(PasswordEncoder passwordEncoder, UserRepository userRepository, AuthorityRepository authorityRepository, AuthenticationManager authenticationManager, JWTConfig jwtConfig) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.authorityRepository = authorityRepository;
         this.authenticationManager = authenticationManager;
         this.jwtConfig = jwtConfig;
     }
@@ -49,6 +55,16 @@ public class AuthService {
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
+
+        Authority authority = authorityRepository.findByAuthority("USER");
+        if(authority == null){
+            authority = new Authority();
+            authority.setAuthority("USER");
+            authorityRepository.save(authority);
+        }
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(authority);
+        user.setAuthorities(authorities);
 
         userRepository.save(user);
     }

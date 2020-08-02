@@ -1,6 +1,5 @@
 package com.jwtspringbootstarter.service;
 
-import com.jwtspringbootstarter.model.User;
 import com.jwtspringbootstarter.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

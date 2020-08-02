@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -58,7 +59,7 @@ public class User implements UserDetails {
             name="users_authorities",
             joinColumns={@JoinColumn(name="user_id", referencedColumnName="ID")},
             inverseJoinColumns={@JoinColumn(name="authorities_id", referencedColumnName="ID")})
-    private List<Authority> authorities;
+    private Set<Authority> authorities;
 
     public Long getId() {
         return id;
@@ -126,14 +127,14 @@ public class User implements UserDetails {
     }
 
     @Override
-    public List<SimpleGrantedAuthority> getAuthorities() {
+    public Set<SimpleGrantedAuthority> getAuthorities() {
         return authorities
                 .stream()
                 .map(role-> new SimpleGrantedAuthority("ROLE_" + role.getAuthority()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    public void setAuthorities(List<Authority> authorities) {
+    public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
 
